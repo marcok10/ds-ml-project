@@ -1,0 +1,131 @@
+IATA_Code,Country,City,Continent
+AAE,Algeria,Annaba,Africa
+AAL,Denmark,Aalborg,Europe
+ABJ,Ivory Coast,Abidjan,Africa
+ADB,Turkey,Izmir,Asia
+AHU,Morocco,Al Hoceima,Africa
+ALG,Algeria,Algiers,Africa
+AMM,Jordan,Amman,Asia
+AMS,Netherlands,Amsterdam,Europe
+ARN,Sweden,Stockholm,Europe
+ATH,Greece,Athens,Europe
+AYT,Turkey,Antalya,Asia
+BCN,Spain,Barcelona,Europe
+BEG,Serbia,Belgrade,Europe
+BEY,Lebanon,Beirut,Asia
+BGF,Central African Republic,Bangui,Africa
+BJA,Algeria,Bejaia,Africa
+BKO,Mali,Bamako,Africa
+BLL,Denmark,Billund,Europe
+BLQ,Italy,Bologna,Europe
+BOD,France,Bordeaux,Europe
+BRI,Italy,Bari,Europe
+BRQ,Czech Republic,Brno,Europe
+BRU,Belgium,Brussels,Europe
+BTS,Slovakia,Bratislava,Europe
+BUD,Hungary,Budapest,Europe
+BYJ,Tunisia,Bou Saada,Africa
+CAG,Italy,Cagliari,Europe
+CAI,Egypt,Cairo,Africa
+CDG,France,Paris,Europe
+CGN,Germany,Cologne,Europe
+CKY,Guinea,Conakry,Africa
+CMN,Morocco,Casablanca,Africa
+COO,Benin,Cotonou,Africa
+CPH,Denmark,Copenhagen,Europe
+CRL,Belgium,Charleroi,Europe
+CTA,Italy,Catania,Europe
+CZL,Algeria,Constantine,Africa
+DJE,Tunisia,Djerba,Africa
+DKR,Senegal,Dakar,Africa
+DOH,Qatar,Doha,Asia
+DSS,Senegal,Dakar,Africa
+DUS,Germany,Düsseldorf,Europe
+EBL,Iraq,Erbil,Asia
+EBM,Tunisia,El Borma,Africa
+ESB,Turkey,Ankara,Asia
+FBM,DR Congo,Lubumbashi,Africa
+FCO,Italy,Rome,Europe
+FIH,DR Congo,Kinshasa,Africa
+FRA,Germany,Frankfurt,Europe
+GAE,Tunisia,Gabès,Africa
+GAF,Tunisia,Gafsa,Africa
+GHA,Algeria,Ghardaïa,Africa
+GNB,France,Grenoble,Europe
+GVA,Switzerland,Geneva,Europe
+HAJ,Germany,Hanover,Europe
+HAM,Germany,Hamburg,Europe
+HBE,Egypt,Alexandria,Africa
+IEV,Ukraine,Kyiv,Europe
+IST,Turkey,Istanbul,Asia
+JED,Saudi Arabia,Jeddah,Asia
+JIB,Djibouti,Djibouti,Africa
+KEF,Iceland,Keflavík,Europe
+KGL,Rwanda,Kigali,Africa
+KRR,Russia,Krasnodar,Europe
+KRT,Sudan,Khartoum,Africa
+KSC,Slovakia,"	Košice",Europe
+KTW,Poland,Katowice,Europe
+LAD,Angola,Luanda,Africa
+LBV,Gabon,Libreville,Africa
+LED,Russia,Saint Petersburg,Europe
+LFW,Togo,Lomé,Africa
+LGW,UK,London,Europe
+LHR,UK,London,Europe
+LIL,France,Lille,Europe
+LIS,Portugal,Lisbon,Europe
+LJU,Slovenia,Ljubljana,Europe
+LUX,Luxembourg,Luxembourg,Europe
+LYS,France,Lyon,Europe
+MAD,Spain,Madrid,Europe
+MED,Saudi Arabia,Medina,Asia
+MIR,Tunisia,Monastir,Africa
+MLA,Malta,Valletta,Europe
+MRS,France,Marseille,Europe
+MTS,Eswatini ,Manzini,Africa
+MUC,Germany,Munich,Europe
+MVB,Gabon,Franceville,Africa
+MXP,Italy,Milan,Europe
+NAP,Italy,Naples,Europe
+NBE,Tunisia,Enfidha,Africa
+NCE,France,Nice,Europe
+NDR,Morocco,Nador,Africa
+NIM,Niger,Niamey,Africa
+NKC,Mauritania,Nouakchott,Africa
+NTE,France,Nantes,Europe
+OPO,Portugal,Porto,Europe
+ORN,Algeria,Oran,Africa
+ORY,France,Paris,Europe
+OSR,Czech Republic,Ostrava,Europe
+OST,Belgium,Ostend,Europe
+OTP,Romania,Bucharest,Europe
+OUA,Burkina Faso,Ouagadougou,Africa
+OUD,Morocco,Oujda,Africa
+PMO,Italy,Palermo,Europe
+PRG,Czech Republic,Prague,Europe
+PSA,Italy,Pisa,Europe
+RAK,Morocco,Marrakesh,Africa
+SFA,Tunisia,Sfax,Africa
+SJJ,Bosnia and Herzegovina,Sarajevo,Europe
+SKG,Greece,Thessaloniki,Europe
+SKX,Algeria,Skikda,Africa
+STR,Germany,Stuttgart,Europe
+SVO,Russia,Moscow,Europe
+SXB,France,Strasbourg,Europe
+SXF,Germany,Berlin,Europe
+TBJ,Tunisia,Tabarka,Africa
+TLL,Estonia,Tallinn,Europe
+TLS,France,Toulouse,Europe
+TMR,Algeria,Tamanrasset,Africa
+TNG,Morocco,Tangier,Africa
+TOE,Tunisia,Tozeur,Africa
+TPS,Italy,Trapani,Europe
+TRN,Italy,Turin,Europe
+TUN,Tunisia,Tunis,Africa
+VCE,Italy,Venice,Europe
+VIE,Austria,Vienna,Europe
+VKO,Russia,Moscow,Europe
+VNO,Lithuania,Vilnius,Europe
+VRN,Italy,Verona,Europe
+YUL,Canada,Montreal,North America
+ZRH,Switzerland,Zurich,Europe
