@@ -9,4 +9,9 @@ jupyterlab-dash==0.1.0a3
 scikit-learn==1.2.2
 statsmodels==0.13.5
 pytest==7.3.1
-xgboost==1.7.5
+#xgboost==1.7.5
+streamlit
+joblib
+xgboost==1.7.6
+lightgbm
+catboost
