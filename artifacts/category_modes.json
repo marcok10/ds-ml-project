@@ -1,1 +1,3 @@
-{"departure_point": "TUN", "arrival_point": "TUN", "flight_status": "ATA", "aircraft_code": "TU 320IMU", "dep_hour": 10, "dep_day": 26, "dep_month": 8, "dep_dayofweek": 6, "dep_quarter": 3, "dep_season": 3, "dep_is_weekend": 0, "dep_time_of_day": "morning", "arr_hour": 9, "arr_day": 26, "arr_month": 8, "arr_dayofweek": 6, "arr_quarter": 3, "arr_season": 3, "arr_is_weekend": 0, "arr_time_of_day": "afternoon", "route": "TUN \u2192 ORY", "is_holiday": 0, "Country": "Tunisia", "City": "Tunis", "aircraft_model": "Airbus A320"}
+version https://git-lfs.github.com/spec/v1
+oid sha256:a16b4098736bc149cf22ffb49c29830bfaa8d58fae02c3f2776242319cd24fd0
+size 527
