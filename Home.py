@@ -1,16 +1,17 @@
-# Home.py
-# To run: streamlit run Home.py
 import streamlit as st
 import pandas as pd
 import joblib
-from datetime import datetime, timedelta
+from datetime import datetime
 from feature_builder import build_features_minimal
+from hype_pipeline import HypeStacker
 
 st.set_page_config(page_title="Flight Delay Dashboard", page_icon="✈️", layout="wide")
 
 @st.cache_resource
 def load_model():
-    return joblib.load("model.joblib")
+    model: HypeStacker = joblib.load("model.joblib")
+    model.load_artifacts("artifacts")
+    return model
 
 model = load_model()
 
