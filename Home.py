@@ -1,117 +1,134 @@
-# Home.py — drop-in UI refresh
-# To run locally: streamlit run Home.py
+# Home.py — Flight Delay Predictions (airports from route_expected_duration.csv)
+# Run: streamlit run Home.py
+from __future__ import annotations
+
 import streamlit as st
 import pandas as pd
 import joblib
-from datetime import datetime, date, time
+from datetime import date, time, datetime
 from pathlib import Path
 
 from feature_builder import build_features_minimal
 
 st.set_page_config(page_title="Flight Delay Predictions", page_icon="✈️", layout="wide")
 
-# ---------- helpers ----------
-def load_airports() -> pd.DataFrame:
-    """
-    Return a dataframe with at least columns: ['iata','name'].
-    Tries data/airports.csv first; otherwise uses a built-in fallback list.
-    """
-    csv_path = Path("data/airports.csv")
-    if csv_path.exists():
-        df = pd.read_csv(csv_path)
-        # normalize columns
-        cols = {c.lower(): c for c in df.columns}
-        # we accept iata / IATA and name / airport / airport_name
-        iata_col = next((cols[k] for k in cols if k in ("iata", "code", "iata_code")), None)
-        name_col = next((cols[k] for k in cols if k in ("name", "airport", "airport_name", "airport fullname")), None)
-        if iata_col is None or name_col is None:
-            raise ValueError("data/airports.csv must have columns for IATA code and airport name.")
-        out = df[[iata_col, name_col]].rename(columns={iata_col: "iata", name_col: "name"})
-        out["iata"] = out["iata"].astype(str).str.upper().str.strip()
-        out["name"] = out["name"].astype(str).str.strip()
-        out = out[out["iata"].str.len() == 3].drop_duplicates(subset=["iata"]).sort_values("iata")
-        return out.reset_index(drop=True)
-
-    # Fallback (keeps the app usable without the CSV)
-    fallback = [
-        ("TUN", "Tunis Carthage"),
-        ("CDG", "Paris Charles de Gaulle"),
-        ("ORY", "Paris Orly"),
-        ("LHR", "London Heathrow"),
-        ("LGW", "London Gatwick"),
-        ("JFK", "New York JFK"),
-        ("EWR", "Newark Liberty"),
-        ("LGA", "New York LaGuardia"),
-        ("SFO", "San Francisco"),
-        ("LAX", "Los Angeles"),
-        ("HND", "Tokyo Haneda"),
-        ("NRT", "Tokyo Narita"),
-        ("DXB", "Dubai"),
-        ("SIN", "Singapore Changi"),
-        ("AMS", "Amsterdam Schiphol"),
-        ("FRA", "Frankfurt"),
-        ("MAD", "Madrid Barajas"),
-        ("BCN", "Barcelona"),
-        ("FCO", "Rome Fiumicino"),
-        ("IST", "Istanbul"),
-        ("DOH", "Doha Hamad"),
-        ("CAI", "Cairo"),
-        ("CMN", "Casablanca"),
-        ("ZRH", "Zurich"),
-        ("MUC", "Munich"),
-    ]
-    return pd.DataFrame(fallback, columns=["iata", "name"])
-
-def options_from_airports(df: pd.DataFrame):
-    # show as "IATA — Name" but keep a mapping back to code
-    labels = [f"{row.iata} — {row.name}" for row in df.itertuples(index=False)]
-    code_by_label = {label: code for label, code in zip(labels, df["iata"])}
-    return labels, code_by_label
-
+# ---------- caches ----------
 @st.cache_resource
 def load_model():
     return joblib.load("model.joblib")
 
+@st.cache_data
+def load_route_endpoints() -> tuple[list[str], list[str]]:
+    """
+    Read artifacts/route_expected_duration.csv and extract unique departure (left)
+    and arrival (right) IATA codes.
+
+    Supports routes formatted like:
+      - "AAA-BBB"
+      - "AAA → BBB"
+      - separate columns (e.g., departure_point / arrival_point, origin / destination, etc.)
+    """
+    p = Path("artifacts/route_expected_duration.csv")
+    if not p.exists():
+        st.error("Missing artifacts/route_expected_duration.csv — cannot determine airports.")
+        st.stop()
+
+    df = pd.read_csv(p)
+
+    # Try to find dep/arr directly
+    dep_candidates = [c for c in df.columns if c.lower() in
+                      {"departure_point", "departure", "origin", "from", "from_iata", "dep"}]
+    arr_candidates = [c for c in df.columns if c.lower() in
+                      {"arrival_point", "arrival", "destination", "to", "to_iata", "arr"}]
+
+    dep_list: list[str] = []
+    arr_list: list[str] = []
+
+    if dep_candidates and arr_candidates:
+        dep_col = dep_candidates[0]
+        arr_col = arr_candidates[0]
+        dep_list = (
+            df[dep_col].astype(str).str.upper().str.strip()
+            .loc[lambda s: s.str.len() == 3]
+            .dropna().unique().tolist()
+        )
+        arr_list = (
+            df[arr_col].astype(str).str.upper().str.strip()
+            .loc[lambda s: s.str.len() == 3]
+            .dropna().unique().tolist()
+        )
+    elif "route" in df.columns:
+        # Parse "AAA-BBB" or "AAA → BBB"
+        routes = df["route"].astype(str)
+        for r in routes:
+            r_clean = r.strip()
+            if "→" in r_clean:
+                a, b = r_clean.split("→", 1)
+            elif "-" in r_clean:
+                a, b = r_clean.split("-", 1)
+            elif "—" in r_clean:  # em dash fallback
+                a, b = r_clean.split("—", 1)
+            elif "->" in r_clean:
+                a, b = r_clean.split("->", 1)
+            else:
+                continue
+            a = a.strip().upper()
+            b = b.strip().upper()
+            if len(a) == 3:
+                dep_list.append(a)
+            if len(b) == 3:
+                arr_list.append(b)
+    else:
+        st.error(
+            "route_expected_duration.csv must have either a 'route' column (e.g. 'AAA-BBB' or 'AAA → BBB') "
+            "or explicit departure/arrival columns."
+        )
+        st.stop()
+
+    dep_codes = sorted(set(dep_list))
+    arr_codes = sorted(set(arr_list))
+
+    if not dep_codes or not arr_codes:
+        st.error("No valid IATA codes found in artifacts/route_expected_duration.csv.")
+        st.stop()
+
+    return dep_codes, arr_codes
+
+# ---------- data ----------
+model = load_model()
+dep_codes, arr_codes = load_route_endpoints()
+
 # ---------- UI ----------
 st.title("✈️ Flight Delay Predictions")
-st.caption("Enter flight details. The app builds features (route, time parts, ETA, etc.) and uses your trained stack.")
-
-air_df = load_airports()
-labels, code_map = options_from_airports(air_df)
+st.caption("Pick a route and departure. The model predicts delay based on your trained stack.")
 
 with st.form("predict_form", clear_on_submit=False):
-    # Two columns for a cleaner layout
     c1, c2 = st.columns(2)
-
-    with c1:
-        dep_label = st.selectbox("Departure Airport (IATA)", labels, index=labels.index("TUN — Tunis Carthage") if "TUN — Tunis Carthage" in labels else 0)
-    with c2:
-        arr_label = st.selectbox("Arrival Airport (IATA)", labels, index=labels.index("CDG — Paris Charles de Gaulle") if "CDG — Paris Charles de Gaulle" in labels else min(1, len(labels)-1))
+    dep = c1.selectbox("Departure Airport (IATA)", dep_codes, index=0, key="dep_code")
+    # pick first arrival that's different to avoid same-same default
+    default_arr_idx = 0
+    if dep in arr_codes and len(arr_codes) > 1:
+        default_arr_idx = 1 if arr_codes[0] == dep else 0
+    arr = c2.selectbox("Arrival Airport (IATA)", arr_codes, index=default_arr_idx, key="arr_code")
 
     c3, c4 = st.columns(2)
-    with c3:
-        dep_date: date = st.date_input("Departure Date", value=date(2017, 1, 16))
-    with c4:
-        # Native time picker; shows OS/Browser time UI (HH:MM)
-        dep_time: time = st.time_input("Departure Time", value=time(8, 5), step=60)
+    dep_date = c3.date_input("Departure Date", value=date(2017, 1, 16))
+    # Native time picker; step=60 shows minutes in 1-min increments but uses the OS/browser time control (not a giant list)
+    dep_time = c4.time_input("Departure Time", value=time(8, 5), step=60)
 
     submitted = st.form_submit_button("Predict")
 
-# ---------- Prediction ----------
+# ---------- prediction ----------
 if submitted:
-    dep_code = code_map[dep_label]
-    arr_code = code_map[arr_label]
-    dep_dt = datetime.combine(dep_date, dep_time)
-
-    raw = pd.DataFrame([{
-        "departure_point": dep_code,
-        "arrival_point":   arr_code,
-        "departure_time":  dep_dt,
-        # no aircraft_model field; your feature_builder fills it from category_modes.json
-    }])
-
-    model = load_model()
-    X = build_features_minimal(raw)
-    y = model.predict(X)[0]
-
-    st.metric("Predicted delay (minutes)", f"{float(y):.1f}")
+    if dep == arr:
+        st.error("Departure and arrival airports must be different.")
+    else:
+        dep_dt = datetime.combine(dep_date, dep_time)
+        raw = pd.DataFrame([{
+            "departure_point": dep,
+            "arrival_point":   arr,
+            "departure_time":  dep_dt,
+        }])
+        X = build_features_minimal(raw)
+        y = float(model.predict(X)[0])
+        st.metric("Predicted delay (minutes)", f"{y:.1f}")
