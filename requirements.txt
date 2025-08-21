@@ -14,3 +14,7 @@ catboost==1.2.5       # has manylinux wheels; works with numpy 1.26.*
 # Misc (often pulled implicitly, but pinning avoids protobuf/tornado issues)
 protobuf==4.25.3
 tornado==6.4.1
+
+shap==0.44.1
+numba==0.57.1
+altair==5.5.0
